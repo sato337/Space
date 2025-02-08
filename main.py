@@ -1,3 +1,5 @@
+import random
+
 import pygame
 import sys
 import os
@@ -44,6 +46,19 @@ class MenuButton:
         return self.flag
 
 
+class Planet(pygame.sprite.Sprite):
+    def __init__(self, x, y, m, vx, vy, radius, *group):
+        super().__init__(*group)
+        self.x = x
+        self.y = y
+        self.m = m
+        self.vx = vx
+        self.vy = vy
+        self.radius = radius
+        self.image = pygame.draw.circle(window, pygame.Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), (self.x, self.y), self.radius)
+        self.rect = pygame.Rect(self.x, self.y, self.radius, self.radius)
+
+
 def main():
     clock = pygame.time.Clock()
 
@@ -55,7 +70,7 @@ def main():
         MenuButton(470, "Выход")
     ]
 
-    running = True
+    """running = True
     while running:
         mouse_pos = pygame.mouse.get_pos()
 
@@ -84,7 +99,25 @@ def main():
             button.draw()
 
         pygame.display.flip()
-        clock.tick(60)
+        clock.tick(60)"""
+
+    all_sprites = pygame.sprite.Group()
+
+    for i in range(5):
+        Planet(random.randint(0, WIDTH), random.randint(0, HEIGHT), 0, 0, 0, 100, all_sprites)
+
+    FPS = 30
+    game_run = True
+    while game_run:
+        clock.tick(FPS)
+        all_sprites.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                game_run = False
+        window.fill(pygame.Color("black"))
+        all_sprites.draw(window)
+        pygame.display.flip()
+
 
     pygame.quit()
     sys.exit()
